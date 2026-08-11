@@ -164,7 +164,7 @@ ${lead.blueprint?.summary ? `• **Blueprint Specs:** ${lead.blueprint.summary}`
 /** Instant Email Dispatch (Web3Forms / FormSubmit / Resend) */
 async function sendEmailNotification(lead: LeadSubmission): Promise<void> {
   const notificationEmail = process.env.NOTIFICATION_EMAIL || "hello@genartml.com";
-  const web3Key = process.env.WEB3FORMS_ACCESS_KEY || process.env.WEB3FORMS_KEY;
+  const web3Key = process.env.WEB3FORMS_ACCESS_KEY || process.env.WEB3FORMS_KEY || "653ea76b-fbc1-4ebb-a13b-58712e49ccd9";
   const resendApiKey = process.env.RESEND_API_KEY;
 
   // Option A: Web3Forms (Free instant email forwarding)
@@ -254,7 +254,7 @@ async function sendEmailNotification(lead: LeadSubmission): Promise<void> {
 /** Email notification for waitlist subscribers */
 async function sendWaitlistNotification(item: WaitlistSubmission): Promise<void> {
   const notificationEmail = process.env.NOTIFICATION_EMAIL || "hello@genartml.com";
-  const web3Key = process.env.WEB3FORMS_ACCESS_KEY || process.env.WEB3FORMS_KEY;
+  const web3Key = process.env.WEB3FORMS_ACCESS_KEY || process.env.WEB3FORMS_KEY || "653ea76b-fbc1-4ebb-a13b-58712e49ccd9";
 
   if (web3Key) {
     try {
