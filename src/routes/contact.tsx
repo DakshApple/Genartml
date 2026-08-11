@@ -9,6 +9,8 @@ const title = "Contact — Let's Build Something | Genartml";
 const description =
   "Tell Genartml what you're trying to solve. We'll figure out where AI, automation or software can help.";
 
+const WEB3FORMS_KEY = "653ea76b-fbc1-4ebb-a13b-58712e49ccd9";
+
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
@@ -79,33 +81,70 @@ function ContactPage() {
 
     setLoading(true);
 
-    try {
-      const res = await submitContactForm({
-        data: {
-          name: formData.name,
-          company: formData.company,
-          email: formData.email,
-          building: formData.building,
-          problem: formData.problem,
-          budget: formData.budget,
-          timeline: formData.timeline,
-          blueprint: blueprintText ? { summary: blueprintText } : undefined,
-          source: "contact_page",
-        },
-      });
+    const payload = {
+      name: formData.name.trim(),
+      company: formData.company.trim(),
+      email: formData.email.trim().toLowerCase(),
+      building: formData.building.trim(),
+      problem: formData.problem.trim(),
+      budget: formData.budget.trim(),
+      timeline: formData.timeline.trim(),
+      blueprint: blueprintText ? { summary: blueprintText } : undefined,
+      source: "contact_page",
+    };
 
-      if (res.success) {
-        setSent(true);
-        toast.success(res.message || "Thanks — we'll get back to you shortly.");
-      } else {
-        toast.error(res.message || "Submission failed. Please try again.");
+    let success = false;
+
+    // 1. Attempt server function
+    try {
+      const res = await submitContactForm({ data: payload });
+      if (res && res.success) {
+        success = true;
       }
     } catch (err) {
-      console.error("Submission error:", err);
-      toast.error("Failed to connect to backend server. Please try again.");
-    } finally {
-      setLoading(false);
+      console.warn("Server function notice (falling back to direct API):", err);
     }
+
+    // 2. Direct Web3Forms API dispatch fallback
+    if (!success) {
+      try {
+        const web3Res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: `New Lead: ${payload.name} (${payload.company || payload.email})`,
+            name: payload.name,
+            email: payload.email,
+            company: payload.company || "N/A",
+            building: payload.building,
+            problem: payload.problem || "N/A",
+            budget: payload.budget || "N/A",
+            timeline: payload.timeline || "N/A",
+            blueprint: payload.blueprint?.summary || "N/A",
+          }),
+        });
+
+        const data = await web3Res.json();
+        if (data.success) {
+          success = true;
+        }
+      } catch (err) {
+        console.error("Web3Forms direct dispatch error:", err);
+      }
+    }
+
+    if (success) {
+      setSent(true);
+      toast.success("Thanks — we'll get back to you shortly!");
+    } else {
+      toast.error("Submission failed. Please try again or email hello@genartml.com directly.");
+    }
+
+    setLoading(false);
   };
 
   return (

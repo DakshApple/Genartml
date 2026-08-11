@@ -2,6 +2,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { submitWaitlistForm } from "@/lib/backend/waitlist";
 
+const WEB3FORMS_KEY = "653ea76b-fbc1-4ebb-a13b-58712e49ccd9";
+
 interface NewsletterFormProps {
   source?: string;
   productSlug?: string;
@@ -29,6 +31,10 @@ export function NewsletterForm({
     }
 
     setLoading(true);
+
+    let success = false;
+
+    // 1. Try server function
     try {
       const res = await submitWaitlistForm({
         data: {
@@ -38,19 +44,49 @@ export function NewsletterForm({
         },
       });
 
-      if (res.success) {
-        setSubscribed(true);
-        toast.success(res.message || "Thank you for subscribing!");
-        setEmail("");
-      } else {
-        toast.error(res.message || "Failed to subscribe.");
+      if (res && res.success) {
+        success = true;
       }
     } catch (err) {
-      console.error(err);
-      toast.error("An unexpected error occurred. Please try again.");
-    } finally {
-      setLoading(false);
+      console.warn("Server waitlist notice (falling back to direct API):", err);
     }
+
+    // 2. Fallback to direct Web3Forms API
+    if (!success) {
+      try {
+        const web3Res = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            access_key: WEB3FORMS_KEY,
+            subject: `New Newsletter/Waitlist Subscriber: ${email}`,
+            email: email,
+            source: source,
+            productSlug: productSlug || "N/A",
+          }),
+        });
+
+        const data = await web3Res.json();
+        if (data.success) {
+          success = true;
+        }
+      } catch (err) {
+        console.error("Web3Forms waitlist error:", err);
+      }
+    }
+
+    if (success) {
+      setSubscribed(true);
+      toast.success("Thank you for subscribing!");
+      setEmail("");
+    } else {
+      toast.error("Failed to subscribe. Please try again.");
+    }
+
+    setLoading(false);
   };
 
   if (subscribed) {
