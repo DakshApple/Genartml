@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import { logos } from "@/lib/logos";
+import { GenartmlLogo } from "./brand-logo";
 
 const links = [
   { to: "/products", label: "Products" },
@@ -21,13 +21,9 @@ export function Nav() {
         <Link
           to="/"
           className="flex items-center gap-2.5"
-           aria-label="Genartml home"
-         >
-           <img
-             src={logos.genartml}
-             alt="Genartml"
-             className="logo-mono h-7 w-auto"
-          />
+          aria-label="Genartml home"
+        >
+          <GenartmlLogo className="h-7 w-auto" />
         </Link>
 
         <div className="hidden items-center gap-7 md:flex">

@@ -1,4 +1,4 @@
-import { logos } from "@/lib/logos";
+import { GenartmlLogo } from "./brand-logo";
 
 const branches = [
   { label: "Products", nodes: ["Cortiva", "Evoluter", "Extutor"] },
@@ -11,7 +11,7 @@ export function Ecosystem() {
       <div className="hero-glow pointer-events-none absolute inset-0" />
       <div className="relative z-10 flex flex-col items-center">
         <div className="flex items-center gap-3 rounded-full border border-hairline bg-glass-strong px-5 py-2.5 sm:px-6 sm:py-3">
-          <img src={logos.genartml} alt="Genartml" className="logo-mono h-5 w-auto" />
+          <GenartmlLogo className="h-5 w-auto" />
         </div>
         <div className="h-8 w-px bg-hairline sm:h-10" />
         <div className="grid w-full grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2">

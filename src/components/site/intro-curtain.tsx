@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { logos } from "@/lib/logos";
+import { GenartmlLogo, GenartmlLogoMark } from "./brand-logo";
 
 /** A one-per-session opening frame: the mark resolves, then the curtain lifts. */
 export function IntroCurtain() {
@@ -37,16 +37,8 @@ export function IntroCurtain() {
       }`}
     >
       <div className="flex flex-col items-center gap-6">
-        <img
-          src={logos.genartmlMark}
-          alt=""
-          className="logo-mono size-14 animate-[rise_0.9s_cubic-bezier(0.32,0.72,0,1)_both]"
-        />
-        <img
-          src={logos.genartml}
-          alt=""
-          className="logo-mono h-6 w-auto animate-[rise_0.9s_cubic-bezier(0.32,0.72,0,1)_0.15s_both]"
-        />
+        <GenartmlLogoMark className="size-14 text-foreground animate-[rise_0.9s_cubic-bezier(0.32,0.72,0,1)_both]" />
+        <GenartmlLogo className="h-6 w-auto animate-[rise_0.9s_cubic-bezier(0.32,0.72,0,1)_0.15s_both]" />
         <div className="h-px w-40 overflow-hidden bg-hairline">
           <div className="h-px w-full origin-left animate-[intro-line_1.2s_cubic-bezier(0.32,0.72,0,1)_both] bg-foreground" />
         </div>

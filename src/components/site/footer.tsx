@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { products, services } from "@/lib/site-data";
-import { logos } from "@/lib/logos";
 import { NewsletterForm } from "@/components/site/newsletter-form";
+import { GenartmlLogo } from "./brand-logo";
 
 export function Footer() {
   return (
@@ -46,11 +46,7 @@ export function Footer() {
 
         <div className="mt-20 grid gap-10 border-t border-hairline pt-12 md:grid-cols-4">
           <div>
-            <img
-              src={logos.genartml}
-              alt="Genartml"
-              className="logo-mono h-7 w-auto"
-            />
+            <GenartmlLogo className="h-7 w-auto" />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               AI Products.
               <br />
