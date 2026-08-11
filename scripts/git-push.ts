@@ -7,6 +7,9 @@ const dir = process.cwd();
 const remoteUrl = "https://github.com/DakshApple/Genartml.git";
 
 async function main() {
+  const tokenArg = process.argv[2];
+  const pat = tokenArg || process.env.GITHUB_PAT || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+
   console.log("🚀 Preparing Git repository...");
 
   // 1. Initialize git repo if .git doesn't exist
@@ -97,8 +100,12 @@ async function main() {
     }
   }
 
-  // 5. Check authentication & Push
-  const pat = process.env.GITHUB_PAT || process.env.GH_TOKEN || process.env.GITHUB_TOKEN;
+  if (!pat) {
+    console.log("\n🔑 GitHub Authentication Needed:");
+    console.log("To push to https://github.com/DakshApple/Genartml.git, provide your GitHub Personal Access Token (PAT).");
+    console.log("Usage: bun scripts/git-push.ts <YOUR_GITHUB_PAT_TOKEN>");
+    return;
+  }
 
   console.log("⬆ Pushing to GitHub...");
   try {
@@ -108,12 +115,7 @@ async function main() {
       dir,
       remote: "origin",
       ref: "main",
-      onAuth: () => {
-        if (pat) {
-          return { username: pat, password: "" };
-        }
-        return undefined;
-      },
+      onAuth: () => ({ username: pat }),
     });
     console.log("🎉 Successfully pushed to https://github.com/DakshApple/Genartml.git!");
     console.log(pushResult);
