@@ -115,6 +115,7 @@ async function main() {
       dir,
       remote: "origin",
       ref: "main",
+      force: true,
       onAuth: () => ({ username: pat }),
     });
     console.log("🎉 Successfully pushed to https://github.com/DakshApple/Genartml.git!");
